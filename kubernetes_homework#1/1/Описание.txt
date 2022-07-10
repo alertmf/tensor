@@ -1,0 +1,2 @@
+kubectl create deployment node-exporter --image=prom/node-exporter
+kubectl expose deployment node-exporter --type=NodePort --port=9100

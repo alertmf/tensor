@@ -1,0 +1,8 @@
+Перый контейнер:
+docker run -it --rm --name c1 -v DataVolume1:/datavolume1 centos
+dd if=/dev/urandom of=/file.tmp bs=1024 count=1000000 oflag=direct status=progress &>/datavolume1/test.txt
+
+
+Третий контейнер, установлен python и prometheus_client для запуска экспортера:
+
+docker run -it --rm --name c3 -p 8000:8000 -v DataVolume1:/datavolume1 centos:my

@@ -1,0 +1,14 @@
+---
+  - name: Install 'mariadb-server' and 'MySQL-python' packages
+    yum:
+      name:
+        - mariadb-server
+        - MySQL-python
+      state: present
+
+  - name: Ensure 'mariadb' service is started and enabled
+    service:
+      name: mariadb
+      state: started
+      enabled: true
+      

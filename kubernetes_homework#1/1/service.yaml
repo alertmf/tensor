@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2022-04-23T16:06:29Z"
+  labels:
+    app: node-exporter
+  name: node-exporter
+  namespace: default
+  resourceVersion: "8118"
+  uid: d5a987dd-e83c-4e3a-8efb-e04a0ffdecd6
+spec:
+  clusterIP: 10.104.78.105
+  clusterIPs:
+  - 10.104.78.105
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 32172
+    port: 9100
+    protocol: TCP
+    targetPort: 9100
+  selector:
+    app: node-exporter
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}

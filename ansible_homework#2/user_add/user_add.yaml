@@ -1,0 +1,21 @@
+---
+- hosts: nodes
+  become: yes
+  gather_facts: false
+
+  vars_files:
+    - files/userlist.yaml
+  
+  tasks:
+    - name: Add users
+      user:
+        name: "{{ item.username }}"
+        password: "{{ item.password | password_hash('sha512') }}"
+        comment: Ansible-generated user
+        state: present
+        shell: /bin/bash
+      loop:
+          "{{ users }}"
+      loop_control:
+        pause: 5
+      no_log: true

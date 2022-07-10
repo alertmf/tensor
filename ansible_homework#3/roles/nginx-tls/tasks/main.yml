@@ -1,0 +1,64 @@
+---
+  - name: Create nginx repo definition
+    copy:
+      src: nginx.repo
+      dest: /etc/yum.repos.d/nginx.repo
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Install nginx
+    yum:
+      name: nginx
+      update_cache: true
+      state: present
+
+  - name: Copy main nginx config file
+    copy:
+      src: files/nginx.conf
+      dest: /etc/nginx/nginx.conf
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart nginx
+
+  - name: Copy site's nginx config file
+    template:
+      src: templates/nginx.conf.j2
+      dest: /etc/nginx/conf.d/{{ ansible_host }}.conf
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart nginx
+
+  - name: Copy index.html
+    template:
+      src: templates/index.html.j2
+      dest: /usr/share/nginx/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+    notify: restart nginx
+
+  - name: Ensure nginx is enabled and started
+    service:
+      name: nginx
+      state: started
+      enabled: true
+
+  - name: Insert firewalld rule for nginx {{ nginx_port_no_tls }} port
+    firewalld:
+      port: "{{ nginx_port_no_tls }}/tcp"
+      permanent: true
+      state: enabled
+      immediate: true
+    ignore_errors: true
+    
+  - name: Insert firewalld rule for nginx {{ nginx_port_tls }} port
+    firewalld:
+      port: "{{ nginx_port_tls }}/tcp"
+      permanent: true
+      state: enabled
+      immediate: true
+    ignore_errors: true
+

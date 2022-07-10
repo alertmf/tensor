@@ -1,0 +1,35 @@
+---
+- name: Roles for webserver
+  hosts: nodes
+  gather_facts: true
+  become: true
+
+  roles:
+    - role: ssl_create
+      tags: 
+          - ssl
+          - nginx_tls
+
+    - role: nginx-tls
+      tags: 
+          - nginx
+          - nginx_tls
+
+    - role: mariadb
+      tags: db
+
+  post_tasks:
+    - name: Check web site from control server
+      uri:
+        url: "{{ item }}"
+        validate_certs: no
+        return_content: true
+      with_items:   
+        - http://{{ ansible_host }}:{{ nginx_port_no_tls }}
+        - https://{{ ansible_host }}:{{ nginx_port_tls }}
+      connection: local
+      register: example_webpage_out
+      failed_when: example_webpage_out.status != 200
+      tags: 
+          - nginx
+          - nginx_tls

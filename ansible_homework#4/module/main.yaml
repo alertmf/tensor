@@ -1,0 +1,14 @@
+---
+- name: Check site's availability
+  hosts: nodes
+  gather_facts: false
+  tasks:
+    - name: healthcheck
+      healthcheck_sh:
+        addr: "ansible-node1.localdomain"
+        tls: false
+      register: bash_result
+
+    - name: print result
+      debug:
+        msg: "{{ bash_result }}"

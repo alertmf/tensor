@@ -1,0 +1,7 @@
+Перый контейнер:
+docker run -it --rm --name c1 --device-write-iops /dev/sda:10 -v DataVolume1:/datavolume1 centos
+dd if=/dev/urandom of=/file.tmp bs=1024 count=1000000 oflag=direct status=progress 2>/datavolume1/test.txt
+
+Второй контейнер:
+docker run -it --rm --name c2 -v DataVolume1:/datavolume1 centos
+tail -f -s 5 ---dis /datavolume1/test.txt

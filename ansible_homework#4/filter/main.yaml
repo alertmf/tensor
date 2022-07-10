@@ -1,0 +1,11 @@
+---
+- name: mac filter
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    mac: '482056876429'
+  tasks:
+    - name: mac_filter
+      debug:
+        msg: "{{ mac | mac_filter() }}"

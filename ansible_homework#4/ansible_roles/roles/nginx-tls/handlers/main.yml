@@ -1,0 +1,6 @@
+---
+# handlers file for nginx-tls
+  - name: restart nginx
+    service:
+      name: nginx
+      state: restarted

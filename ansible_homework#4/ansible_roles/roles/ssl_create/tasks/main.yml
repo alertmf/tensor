@@ -1,0 +1,54 @@
+---
+  - name: Add repository for pip
+    yum:
+      name: epel-release
+      state: latest
+
+  - name: Install pip
+    yum:
+      name: python-pip
+      state: latest
+
+  - name: Update pip
+    pip:
+      name: pip==20.3.4
+      extra_args: --upgrade
+
+  - name: Install cryptography pip package
+    pip:
+      name: cryptography
+
+  - name: Ensure directory exists for local self-signed TLS certs.
+    file:
+      path: "{{ cert_path  }}"
+      state: directory
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Generate private key.
+    openssl_privatekey:
+      path: "{{ cert_path  }}/privkey.pem"
+      size: 2048
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Generate CSR.
+    openssl_csr:
+      path: "{{ cert_path }}/cert.csr"
+      privatekey_path: "{{ cert_path }}/privkey.pem"
+      common_name: "{{ ansible_host }}"
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Generate selfsigned certificate
+    openssl_certificate:
+      path: "{{ cert_path  }}/cert.crt"
+      privatekey_path: "{{ cert_path  }}/privkey.pem"
+      csr_path: "{{ cert_path }}/cert.csr"
+      provider: selfsigned
+      owner: root
+      group: root
+      mode: 0644

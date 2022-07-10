@@ -1,0 +1,22 @@
+---
+- name: Put repo files to /etc/yum.repos.d/ directory
+  copy:
+    src: "{{ item }}"
+    dest: /etc/yum.repos.d/
+    owner: root
+    group: root
+    mode: 0644
+  with_fileglob:
+    - files/*.repo
+
+- name: Install packages from 'php_packages_list'
+  yum:
+    name: "{{ php_packages_list }}"
+    update_cache: true
+    state: present
+
+- name: Start php-fpm Service
+  service:
+    name: php-fpm
+    state: started
+    enabled: true

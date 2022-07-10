@@ -1,0 +1,3 @@
+---
+# vars file for ssl_create
+cert_path: /etc/nginx/ssl

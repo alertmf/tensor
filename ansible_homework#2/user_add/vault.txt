@@ -1,0 +1,4 @@
+vault-pass: Qwerty
+ansible-playbook user_add.yaml --ask-vault-pass
+
+
